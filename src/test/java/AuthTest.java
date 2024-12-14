@@ -1,19 +1,19 @@
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import static io.restassured.RestAssured.given;
 
 public class AuthTest {
-    private final String URL = "http://185.128.107.32:8080";
     private final String mesInvalidCredentials = "Invalid credentials";
     private final String mesUsernameExist= "User with USERNAME=user already exists";
     private final String mesEmailExist= "User with EMAIL=user@te.st already exists";
 
     @Test
     public void successRegistration() {
+        Specification.init(Specification.request(), Specification.resStatus(200));
+
         RegisterRequest data = new RegisterRequest(
                 "user",
                 "user",
@@ -22,40 +22,39 @@ public class AuthTest {
                 "1990-01-01"
         );
 
-        Response res = RestAssured.given()
+        Response res = given()
                 .when()
-                .contentType(ContentType.JSON)
                 .body(data)
-                .post(URL + "/signup");
+                .post("/signup");
 
-
-        Assertions.assertEquals(200, res.statusCode());
         Assertions.assertNotNull(res.jsonPath().get("token"));
     }
 
     @Test
     public void failRegistrationExistEmail() {
+        Specification.init(Specification.request(), Specification.resStatus(409));
+
         RegisterRequest data = new RegisterRequest(
-                "user12345",
+                "sfdfsd",
                 "123",
                 "user@te.st",
                 "Male",
                 "1990-01-01"
         );
 
-        Response res = RestAssured.given()
+        Response res = given()
                 .when()
-                .contentType(ContentType.JSON)
                 .body(data)
-                .post(URL + "/signup");
+                .post("/signup");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(409, res.statusCode());
         Assertions.assertEquals(mesEmailExist, actualMessage);
     }
 
     @Test
     public void failRegistrationExistUsername() {
+        Specification.init(Specification.request(), Specification.resStatus(409));
+
         RegisterRequest data = new RegisterRequest(
                 "user",
                 "123",
@@ -64,43 +63,41 @@ public class AuthTest {
                 "1990-01-01"
         );
 
-        Response res = RestAssured.given()
+        Response res = given()
                 .when()
-                .contentType(ContentType.JSON)
                 .body(data)
-                .post(URL + "/signup");
+                .post("/signup");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(409, res.statusCode());
         Assertions.assertEquals(mesUsernameExist, actualMessage);
     }
 
     @Test
     public void successLogin() {
+        Specification.init(Specification.request(), Specification.resStatus(200));
+
         LoginRequest data = new LoginRequest("user", "user");
 
-        Response res = RestAssured.given()
+        Response res = given()
                 .when()
-                .contentType(ContentType.JSON)
                 .body(data)
-                .post(URL + "/login");
+                .post("/login");
 
-        Assertions.assertEquals(200, res.statusCode());
         Assertions.assertNotNull(res.jsonPath().get("token"));
     }
 
     @Test
     public void checkNotSuccessLogin() {
+        Specification.init(Specification.request(), Specification.resStatus(401));
+
         LoginRequest data = new LoginRequest("admin", "");
 
-        Response res = RestAssured.given()
+        Response res = given()
                 .when()
-                .contentType(ContentType.JSON)
                 .body(data)
-                .post(URL + "/login");
+                .post("/login");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(401, res.statusCode());
         Assertions.assertEquals(mesInvalidCredentials, actualMessage);
     }
 }
