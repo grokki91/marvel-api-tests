@@ -1,5 +1,6 @@
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
+import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ public class AuthTest {
     private final String mesEmailExist= "User with EMAIL=user@te.st already exists";
 
     @Test
+    @Description("Check success registration")
     public void successRegistration() {
         Specification.init(Specification.request(), Specification.resStatus(200));
 
@@ -31,6 +33,7 @@ public class AuthTest {
     }
 
     @Test
+    @Description("Check registration with exist email")
     public void failRegistrationExistEmail() {
         Specification.init(Specification.request(), Specification.resStatus(409));
 
@@ -52,6 +55,7 @@ public class AuthTest {
     }
 
     @Test
+    @Description("Check registration with exist username")
     public void failRegistrationExistUsername() {
         Specification.init(Specification.request(), Specification.resStatus(409));
 
@@ -73,6 +77,7 @@ public class AuthTest {
     }
 
     @Test
+    @Description("Check success login")
     public void successLogin() {
         Specification.init(Specification.request(), Specification.resStatus(200));
 
@@ -87,10 +92,11 @@ public class AuthTest {
     }
 
     @Test
+    @Description("Check login with empty field")
     public void checkNotSuccessLogin() {
         Specification.init(Specification.request(), Specification.resStatus(401));
 
-        LoginRequest data = new LoginRequest("admin", "");
+        LoginRequest data = new LoginRequest("test", "");
 
         Response res = given()
                 .when()
