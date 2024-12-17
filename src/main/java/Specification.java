@@ -7,7 +7,6 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import utils.Logger;
-
 import static io.restassured.RestAssured.given;
 
 public class Specification {

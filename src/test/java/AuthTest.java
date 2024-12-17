@@ -5,11 +5,9 @@ import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import utils.ErrorMessages;
 
 public class AuthTest {
-    private final String mesInvalidCredentials = "Invalid credentials";
-    private final String mesUsernameExist= "User with USERNAME=user already exists";
-    private final String mesEmailExist= "User with EMAIL=user@te.st already exists";
 
     @Test
     @Description("Check success registration")
@@ -33,7 +31,7 @@ public class AuthTest {
         Response res = Specification.postRequest(newUser, "/signup");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertTrue(actualMessage.contains(existEmail), "Error message should contain the email: " + existEmail);
+        Assertions.assertEquals(ErrorMessages.EMAIL_EXIST.getMessage(existEmail), actualMessage);
     }
 
     @Test
@@ -47,7 +45,7 @@ public class AuthTest {
         Response res = Specification.postRequest(newUser, "/signup");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertTrue(actualMessage.contains(existUsername + "22"), "Error message should contain the username: " + existUsername);
+        Assertions.assertEquals(ErrorMessages.USERNAME_EXIST.getMessage(existUsername), actualMessage);
     }
 
     @Test
@@ -73,6 +71,6 @@ public class AuthTest {
         Response res = Specification.postRequest(data, "/login");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(mesInvalidCredentials, actualMessage);
+        Assertions.assertEquals(ErrorMessages.INVALID_CREDENTIALS.getMessage(), actualMessage);
     }
 }
