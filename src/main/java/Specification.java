@@ -1,13 +1,14 @@
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
-import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
-import static io.restassured.RestAssured.*;
+import utils.Logger;
+
+import static io.restassured.RestAssured.given;
 
 public class Specification {
     private static final String URL = "http://185.128.107.32:8080";
@@ -16,6 +17,7 @@ public class Specification {
         return new RequestSpecBuilder()
                 .setBaseUri(URL)
                 .setContentType(ContentType.JSON)
+                .addFilter(new Logger())
                 .build();
     }
 
@@ -46,4 +48,6 @@ public class Specification {
                 .expectStatusCode(status)
                 .build();
     }
+
+
 }

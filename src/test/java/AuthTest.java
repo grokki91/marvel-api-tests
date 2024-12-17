@@ -47,7 +47,7 @@ public class AuthTest {
         Response res = Specification.postRequest(newUser, "/signup");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertTrue(actualMessage.contains(existUsername), "Error message should contain the username: " + existUsername);
+        Assertions.assertTrue(actualMessage.contains(existUsername + "22"), "Error message should contain the username: " + existUsername);
     }
 
     @Test

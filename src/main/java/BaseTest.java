@@ -1,8 +1,3 @@
-import static io.restassured.RestAssured.given;
+public abstract class BaseTest {
 
-public class BaseTest {
-
-    public void init() {
-
-    }
 }
