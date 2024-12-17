@@ -17,7 +17,8 @@ public class AuthTest {
         Response res = Specification.postRequest(data, "/signup");
         String token = res.jsonPath().get("token");
 
-        Assertions.assertNotNull(token, "Token is empty");
+        Assertions.assertNotNull(token);
+        Assertions.assertEquals(200, res.statusCode());
     }
 
     @Test
@@ -30,8 +31,10 @@ public class AuthTest {
         Specification.postRequest(existUser, "/signup");
         Response res = Specification.postRequest(newUser, "/signup");
 
-        String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(ErrorMessages.EMAIL_EXIST.getMessage(existEmail), actualMessage);
+        String actual = res.jsonPath().getString("Message");
+
+        Assertions.assertEquals(ErrorMessages.EMAIL_EXIST.getMessage(existEmail), actual);
+        Assertions.assertEquals(409, res.statusCode());
     }
 
     @Test
@@ -44,8 +47,10 @@ public class AuthTest {
         Specification.postRequest(existUser, "/signup");
         Response res = Specification.postRequest(newUser, "/signup");
 
-        String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(ErrorMessages.USERNAME_EXIST.getMessage(existUsername), actualMessage);
+        String actual = res.jsonPath().getString("Message");
+
+        Assertions.assertEquals(ErrorMessages.USERNAME_EXIST.getMessage(existUsername), actual);
+        Assertions.assertEquals(409, res.statusCode());
     }
 
     @Test
@@ -61,6 +66,7 @@ public class AuthTest {
         Response res = Specification.postRequest(data, "/login");
 
         Assertions.assertNotNull(res.jsonPath().get("token"));
+        Assertions.assertEquals(200, res.statusCode());
     }
 
     @Test
@@ -70,7 +76,9 @@ public class AuthTest {
 
         Response res = Specification.postRequest(data, "/login");
 
-        String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(ErrorMessages.INVALID_CREDENTIALS.getMessage(), actualMessage);
+        String actual = res.jsonPath().getString("Message");
+
+        Assertions.assertEquals(ErrorMessages.INVALID_CREDENTIALS.getMessage(), actual);
+        Assertions.assertEquals(401, res.statusCode());
     }
 }
