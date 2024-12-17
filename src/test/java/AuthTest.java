@@ -1,10 +1,10 @@
+import data.DataGenerator;
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
 import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import static io.restassured.RestAssured.given;
 
 public class AuthTest {
     private final String mesInvalidCredentials = "Invalid credentials";
@@ -14,79 +14,53 @@ public class AuthTest {
     @Test
     @Description("Check success registration")
     public void successRegistration() {
-        Specification.init(Specification.request(), Specification.resStatus(200));
+        RegisterRequest data = DataGenerator.createUser();
 
-        RegisterRequest data = new RegisterRequest(
-                "user",
-                "user",
-                "user@example.com",
-                "Male",
-                "1990-01-01"
-        );
+        Response res = Specification.postRequest(data, "/signup");
+        String token = res.jsonPath().get("token");
 
-        Response res = given()
-                .when()
-                .body(data)
-                .post("/signup");
-
-        Assertions.assertNotNull(res.jsonPath().get("token"));
+        Assertions.assertNotNull(token, "Token is empty");
     }
 
     @Test
     @Description("Check registration with exist email")
     public void failRegistrationExistEmail() {
-        Specification.init(Specification.request(), Specification.resStatus(409));
+        RegisterRequest existUser = DataGenerator.createUser();
+        String existEmail = existUser.email();
+        RegisterRequest newUser = DataGenerator.createUserExceptEmail(existEmail);
 
-        RegisterRequest data = new RegisterRequest(
-                "sfdfsd",
-                "123",
-                "user@te.st",
-                "Male",
-                "1990-01-01"
-        );
-
-        Response res = given()
-                .when()
-                .body(data)
-                .post("/signup");
+        Specification.postRequest(existUser, "/signup");
+        Response res = Specification.postRequest(newUser, "/signup");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(mesEmailExist, actualMessage);
+        Assertions.assertTrue(actualMessage.contains(existEmail), "Error message should contain the email: " + existEmail);
     }
 
     @Test
     @Description("Check registration with exist username")
     public void failRegistrationExistUsername() {
-        Specification.init(Specification.request(), Specification.resStatus(409));
+        RegisterRequest existUser = DataGenerator.createUser();
+        String existUsername = existUser.username();
+        RegisterRequest newUser = DataGenerator.createUserExceptUsername(existUsername);
 
-        RegisterRequest data = new RegisterRequest(
-                "user",
-                "123",
-                "user123@example.com",
-                "Male",
-                "1990-01-01"
-        );
-
-        Response res = given()
-                .when()
-                .body(data)
-                .post("/signup");
+        Specification.postRequest(existUser, "/signup");
+        Response res = Specification.postRequest(newUser, "/signup");
 
         String actualMessage = res.jsonPath().getString("Message");
-        Assertions.assertEquals(mesUsernameExist, actualMessage);
+        Assertions.assertTrue(actualMessage.contains(existUsername), "Error message should contain the username: " + existUsername);
     }
 
     @Test
     @Description("Check success login")
     public void successLogin() {
-        Specification.init(Specification.request(), Specification.resStatus(200));
+        RegisterRequest existUser = DataGenerator.createUser();
+        String username = existUser.username();
+        String password = existUser.password();
 
-        LoginRequest data = new LoginRequest("user", "user");
+        Specification.postRequest(existUser, "/signup");
+        LoginRequest data = new LoginRequest(username, password);
 
-        Response res = given()
-                .when()
-                .body(data)
-                .post("/login");
+        Response res = Specification.postRequest(data, "/login");
 
         Assertions.assertNotNull(res.jsonPath().get("token"));
     }
@@ -94,14 +68,9 @@ public class AuthTest {
     @Test
     @Description("Check login with empty field")
     public void checkNotSuccessLogin() {
-        Specification.init(Specification.request(), Specification.resStatus(401));
-
         LoginRequest data = new LoginRequest("test", "");
 
-        Response res = given()
-                .when()
-                .body(data)
-                .post("/login");
+        Response res = Specification.postRequest(data, "/login");
 
         String actualMessage = res.jsonPath().getString("Message");
         Assertions.assertEquals(mesInvalidCredentials, actualMessage);
