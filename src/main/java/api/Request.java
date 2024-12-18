@@ -1,14 +1,13 @@
 package api;
 
+import utils.Logger;
+import utils.ReadProperties;
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import utils.Logger;
-import utils.ReadProperties;
-
 import static io.restassured.RestAssured.given;
 
 public class Request {
@@ -22,7 +21,17 @@ public class Request {
                 .build();
     }
 
-    public static Response postRequest(RegisterRequest data, String endpoint) {
+    public static Response get(String endpoint) {
+        return given()
+                .spec(baseRequest())
+                .when()
+                .get(endpoint)
+                .then()
+                .log().ifValidationFails()
+                .extract().response();
+    }
+
+    public static Response post(RegisterRequest data, String endpoint) {
         return given()
                 .spec(baseRequest())
                 .when()
@@ -33,7 +42,7 @@ public class Request {
                 .extract().response();
     }
 
-    public static Response postRequest(LoginRequest data, String endpoint) {
+    public static Response post(LoginRequest data, String endpoint) {
         return given()
                 .spec(baseRequest())
                 .when()

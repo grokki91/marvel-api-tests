@@ -2,6 +2,7 @@ package utils;
 
 public enum ErrorMessages {
     INVALID_CREDENTIALS("Invalid credentials"),
+    JWT_MISSING("JWT is missing"),
     EMAIL_EXIST("User with EMAIL=%s already exists"),
     USERNAME_EXIST("User with USERNAME=%s already exists");
 

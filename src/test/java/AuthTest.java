@@ -3,11 +3,13 @@ import data.DataGenerator;
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
 import io.qameta.allure.Description;
+import io.qameta.allure.Owner;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import utils.ErrorMessages;
 
+@Owner("QA")
 public class AuthTest {
 
     @Test
@@ -15,7 +17,7 @@ public class AuthTest {
     public void successRegistration() {
         RegisterRequest data = DataGenerator.createUser();
 
-        Response res = Request.postRequest(data, "/signup");
+        Response res = Request.post(data, "/signup");
         String token = res.jsonPath().get("token");
 
         Assertions.assertNotNull(token);
@@ -29,8 +31,8 @@ public class AuthTest {
         String existEmail = existUser.email();
         RegisterRequest newUser = DataGenerator.createUserExceptEmail(existEmail);
 
-        Request.postRequest(existUser, "/signup");
-        Response res = Request.postRequest(newUser, "/signup");
+        Request.post(existUser, "/signup");
+        Response res = Request.post(newUser, "/signup");
 
         String actual = res.jsonPath().getString("Message");
 
@@ -45,8 +47,8 @@ public class AuthTest {
         String existUsername = existUser.username();
         RegisterRequest newUser = DataGenerator.createUserExceptUsername(existUsername);
 
-        Request.postRequest(existUser, "/signup");
-        Response res = Request.postRequest(newUser, "/signup");
+        Request.post(existUser, "/signup");
+        Response res = Request.post(newUser, "/signup");
 
         String actual = res.jsonPath().getString("Message");
 
@@ -61,10 +63,10 @@ public class AuthTest {
         String username = existUser.username();
         String password = existUser.password();
 
-        Request.postRequest(existUser, "/signup");
+        Request.post(existUser, "/signup");
         LoginRequest data = new LoginRequest(username, password);
 
-        Response res = Request.postRequest(data, "/login");
+        Response res = Request.post(data, "/login");
 
         Assertions.assertNotNull(res.jsonPath().get("token"));
         Assertions.assertEquals(200, res.statusCode());
@@ -75,7 +77,7 @@ public class AuthTest {
     public void checkNotSuccessLogin() {
         LoginRequest data = new LoginRequest("test", "");
 
-        Response res = Request.postRequest(data, "/login");
+        Response res = Request.post(data, "/login");
 
         String actual = res.jsonPath().getString("Message");
 
