@@ -7,11 +7,13 @@ import org.junit.jupiter.api.Test;
 import utils.ErrorMessages;
 
 @Owner("QA")
-public class UserTest {
+public class CharacterTest {
+    private final String endpoint = "/api/characters";
+
     @Test
     @Description("Send request without bearer token")
     public void checkJwtMissing() {
-        Response res = Request.get("/api/characters");
+        Response res = Request.getWithoutAuth(endpoint);
         String actual = res.jsonPath().get("Message");
 
         Assertions.assertEquals(ErrorMessages.JWT_MISSING.getMessage(), actual);
@@ -19,7 +21,18 @@ public class UserTest {
     }
 
     @Test
-    public void getUsers() {
+    public void checkListCharacters() {
+        Response res = Request.get(endpoint);
 
+        Assertions.assertEquals(200, res.statusCode());
+    }
+
+    @Test
+    public void checkCurrentCharacter() {
+        Response res = Request.get(endpoint + "/3");
+        String alias = res.jsonPath().getString("alias");
+
+        Assertions.assertEquals("Wolverine", alias);
+        Assertions.assertEquals(200, res.statusCode());
     }
 }

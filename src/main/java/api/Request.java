@@ -1,5 +1,6 @@
 package api;
 
+import utils.GetJwtToken;
 import utils.Logger;
 import utils.ReadProperties;
 import dto.request.LoginRequest;
@@ -21,7 +22,26 @@ public class Request {
                 .build();
     }
 
+    public static RequestSpecification baseRequestWithAuth() {
+        return new RequestSpecBuilder()
+                .setBaseUri(URL)
+                .setContentType(ContentType.JSON)
+                .addFilter(new Logger())
+                .addHeader("Authorization", "Bearer " + GetJwtToken.getToken())
+                .build();
+    }
+
     public static Response get(String endpoint) {
+        return given()
+                .spec(baseRequestWithAuth())
+                .when()
+                .get(endpoint)
+                .then()
+                .log().ifValidationFails()
+                .extract().response();
+    }
+
+    public static Response getWithoutAuth(String endpoint) {
         return given()
                 .spec(baseRequest())
                 .when()
