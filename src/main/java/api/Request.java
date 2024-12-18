@@ -1,18 +1,20 @@
+package api;
+
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 import utils.Logger;
+import utils.ReadProperties;
+
 import static io.restassured.RestAssured.given;
 
-public class Specification {
-    private static final String URL = "http://185.128.107.32:8080";
+public class Request {
+    private static final String URL = ReadProperties.get("base_url");
 
-    public static RequestSpecification request() {
+    public static RequestSpecification baseRequest() {
         return new RequestSpecBuilder()
                 .setBaseUri(URL)
                 .setContentType(ContentType.JSON)
@@ -22,7 +24,7 @@ public class Specification {
 
     public static Response postRequest(RegisterRequest data, String endpoint) {
         return given()
-                .spec(request())
+                .spec(baseRequest())
                 .when()
                 .body(data)
                 .post(endpoint)
@@ -33,7 +35,7 @@ public class Specification {
 
     public static Response postRequest(LoginRequest data, String endpoint) {
         return given()
-                .spec(request())
+                .spec(baseRequest())
                 .when()
                 .body(data)
                 .post(endpoint)
@@ -41,12 +43,4 @@ public class Specification {
                 .log().ifValidationFails()
                 .extract().response();
     }
-
-    public static ResponseSpecification resStatus(int status) {
-        return new ResponseSpecBuilder()
-                .expectStatusCode(status)
-                .build();
-    }
-
-
 }

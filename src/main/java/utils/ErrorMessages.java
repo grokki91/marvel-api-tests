@@ -5,14 +5,14 @@ public enum ErrorMessages {
     EMAIL_EXIST("User with EMAIL=%s already exists"),
     USERNAME_EXIST("User with USERNAME=%s already exists");
 
-    private String message;
+    private final String message;
 
     ErrorMessages(String message) {
         this.message = message;
     }
 
     public String getMessage() {
-        return String.format(message);
+        return message;
     }
 
     public String getMessage(String arg) {

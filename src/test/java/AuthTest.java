@@ -1,3 +1,4 @@
+import api.Request;
 import data.DataGenerator;
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
@@ -14,7 +15,7 @@ public class AuthTest {
     public void successRegistration() {
         RegisterRequest data = DataGenerator.createUser();
 
-        Response res = Specification.postRequest(data, "/signup");
+        Response res = Request.postRequest(data, "/signup");
         String token = res.jsonPath().get("token");
 
         Assertions.assertNotNull(token);
@@ -28,8 +29,8 @@ public class AuthTest {
         String existEmail = existUser.email();
         RegisterRequest newUser = DataGenerator.createUserExceptEmail(existEmail);
 
-        Specification.postRequest(existUser, "/signup");
-        Response res = Specification.postRequest(newUser, "/signup");
+        Request.postRequest(existUser, "/signup");
+        Response res = Request.postRequest(newUser, "/signup");
 
         String actual = res.jsonPath().getString("Message");
 
@@ -44,8 +45,8 @@ public class AuthTest {
         String existUsername = existUser.username();
         RegisterRequest newUser = DataGenerator.createUserExceptUsername(existUsername);
 
-        Specification.postRequest(existUser, "/signup");
-        Response res = Specification.postRequest(newUser, "/signup");
+        Request.postRequest(existUser, "/signup");
+        Response res = Request.postRequest(newUser, "/signup");
 
         String actual = res.jsonPath().getString("Message");
 
@@ -60,10 +61,10 @@ public class AuthTest {
         String username = existUser.username();
         String password = existUser.password();
 
-        Specification.postRequest(existUser, "/signup");
+        Request.postRequest(existUser, "/signup");
         LoginRequest data = new LoginRequest(username, password);
 
-        Response res = Specification.postRequest(data, "/login");
+        Response res = Request.postRequest(data, "/login");
 
         Assertions.assertNotNull(res.jsonPath().get("token"));
         Assertions.assertEquals(200, res.statusCode());
@@ -74,7 +75,7 @@ public class AuthTest {
     public void checkNotSuccessLogin() {
         LoginRequest data = new LoginRequest("test", "");
 
-        Response res = Specification.postRequest(data, "/login");
+        Response res = Request.postRequest(data, "/login");
 
         String actual = res.jsonPath().getString("Message");
 
