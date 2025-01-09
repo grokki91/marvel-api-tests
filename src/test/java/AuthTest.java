@@ -7,13 +7,15 @@ import io.qameta.allure.Owner;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import utils.ErrorMessages;
 
 @Owner("QA")
 public class AuthTest {
 
     @Test
-    @Description("Check success registration")
+    @Description("User registration with valid data")
     public void successRegistration() {
         RegisterRequest data = DataGenerator.createUser();
 
@@ -25,7 +27,7 @@ public class AuthTest {
     }
 
     @Test
-    @Description("Check registration with exist email")
+    @Description("User registration with an existing email")
     public void failRegistrationExistEmail() {
         RegisterRequest existUser = DataGenerator.createUser();
         String existEmail = existUser.email();
@@ -41,7 +43,7 @@ public class AuthTest {
     }
 
     @Test
-    @Description("Check registration with exist username")
+    @Description("User registration with an existing username")
     public void failRegistrationExistUsername() {
         RegisterRequest existUser = DataGenerator.createUser();
         String existUsername = existUser.username();
@@ -57,7 +59,7 @@ public class AuthTest {
     }
 
     @Test
-    @Description("Check success login")
+    @Description("User login with valid data")
     public void successLogin() {
         RegisterRequest existUser = DataGenerator.createUser();
         String username = existUser.username();

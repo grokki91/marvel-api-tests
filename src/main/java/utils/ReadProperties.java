@@ -17,9 +17,13 @@ public class ReadProperties {
     }
 
     public static String get(String key) {
-        load();
-        String value = prop.getProperty(key);
+        String env = System.getenv(key);
 
-        return System.getenv(value);
+        if (env != null && !env.isEmpty()) {
+            return env;
+        }
+
+        load();
+        return prop.getProperty(key);
     }
 }

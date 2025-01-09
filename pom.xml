@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <junit.jupiter.version>5.10.0</junit.jupiter.version>
+        <junit.version>5.10.0</junit.version>
         <restassured.version>5.5.0</restassured.version>
         <jackson.version>2.18.2</jackson.version>
         <allure.version>2.25.0</allure.version>
@@ -19,6 +19,7 @@
         <maven.surefire.plugin.version>3.2.3</maven.surefire.plugin.version>
         <aspectj.version>1.9.21</aspectj.version>
         <faker.version>1.0.2</faker.version>
+        <postgres.version>42.7.4</postgres.version>
     </properties>
 
     <dependencies>
@@ -30,7 +31,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <version>${junit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -56,6 +57,17 @@
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
             <version>${faker.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgres.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+            <version>${junit.version}</version>
         </dependency>
     </dependencies>
 
