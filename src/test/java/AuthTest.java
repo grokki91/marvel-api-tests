@@ -6,6 +6,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -74,10 +75,11 @@ public class AuthTest {
         Assertions.assertEquals(200, res.statusCode());
     }
 
-    @Test
-    @Description("Check login with empty field")
-    public void checkNotSuccessLogin() {
-        LoginRequest data = new LoginRequest("test", "");
+    @Description("User login with empty field")
+    @ParameterizedTest(name = "Login with username = \"{0}\", password = \"{1}\"")
+    @CsvFileSource(resources = "data/login_failed.csv", numLinesToSkip = 1)
+    public void checkNotSuccessLogin(String username, String password) {
+        LoginRequest data = new LoginRequest(username, password);
 
         Response res = Request.post(data, "/login");
 
