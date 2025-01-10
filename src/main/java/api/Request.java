@@ -1,5 +1,6 @@
 package api;
 
+import dto.request.CharacterRequest;
 import utils.GetJwtToken;
 import utils.Logger;
 import utils.ReadProperties;
@@ -65,6 +66,17 @@ public class Request {
     public static Response post(LoginRequest data, String endpoint) {
         return given()
                 .spec(baseRequest())
+                .when()
+                .body(data)
+                .post(endpoint)
+                .then()
+                .log().ifValidationFails()
+                .extract().response();
+    }
+
+    public static Response post(CharacterRequest data, String endpoint) {
+        return given()
+                .spec(baseRequestWithAuth())
                 .when()
                 .body(data)
                 .post(endpoint)

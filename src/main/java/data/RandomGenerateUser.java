@@ -5,7 +5,7 @@ import dto.request.RegisterRequest;
 
 import java.text.SimpleDateFormat;
 
-public class DataGenerator {
+public class RandomGenerateUser {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static final Faker user = new Faker();
 

@@ -1,12 +1,11 @@
 import api.Request;
-import data.DataGenerator;
+import data.RandomGenerateUser;
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -18,7 +17,7 @@ public class AuthTest {
     @Test
     @Description("User registration with valid data")
     public void successRegistration() {
-        RegisterRequest data = DataGenerator.createUser();
+        RegisterRequest data = RandomGenerateUser.createUser();
 
         Response res = Request.post(data, "/signup");
         String token = res.jsonPath().get("token");
@@ -30,9 +29,9 @@ public class AuthTest {
     @Test
     @Description("User registration with an existing email")
     public void failRegistrationExistEmail() {
-        RegisterRequest existUser = DataGenerator.createUser();
+        RegisterRequest existUser = RandomGenerateUser.createUser();
         String existEmail = existUser.email();
-        RegisterRequest newUser = DataGenerator.createUserExceptEmail(existEmail);
+        RegisterRequest newUser = RandomGenerateUser.createUserExceptEmail(existEmail);
 
         Request.post(existUser, "/signup");
         Response res = Request.post(newUser, "/signup");
@@ -46,9 +45,9 @@ public class AuthTest {
     @Test
     @Description("User registration with an existing username")
     public void failRegistrationExistUsername() {
-        RegisterRequest existUser = DataGenerator.createUser();
+        RegisterRequest existUser = RandomGenerateUser.createUser();
         String existUsername = existUser.username();
-        RegisterRequest newUser = DataGenerator.createUserExceptUsername(existUsername);
+        RegisterRequest newUser = RandomGenerateUser.createUserExceptUsername(existUsername);
 
         Request.post(existUser, "/signup");
         Response res = Request.post(newUser, "/signup");
@@ -62,7 +61,7 @@ public class AuthTest {
     @Test
     @Description("User login with valid data")
     public void successLogin() {
-        RegisterRequest existUser = DataGenerator.createUser();
+        RegisterRequest existUser = RandomGenerateUser.createUser();
         String username = existUser.username();
         String password = existUser.password();
 

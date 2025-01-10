@@ -1,7 +1,7 @@
 package utils;
 
 import api.Request;
-import data.DataGenerator;
+import data.RandomGenerateUser;
 import dto.request.RegisterRequest;
 import io.restassured.response.Response;
 
@@ -17,7 +17,7 @@ public class GetJwtToken {
     }
 
     private static String generateToken() {
-        RegisterRequest data = DataGenerator.createUser();
+        RegisterRequest data = RandomGenerateUser.createUser();
 
         Response res = Request.post(data, "/signup");
 
