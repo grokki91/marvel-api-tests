@@ -1,4 +1,4 @@
-# API Automation Project
+# Marvel API Framework
 
 ## Description:
 This framework allows testing CRUD operations for a Marvel character creation app, where users need to authenticate (using JWT) before creating a character.
