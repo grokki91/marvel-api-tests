@@ -2,7 +2,7 @@ package api;
 
 import dto.request.CharacterRequest;
 import utils.GetJwtToken;
-import utils.Logger;
+import utils.CustomLogger;
 import utils.ReadProperties;
 import dto.request.LoginRequest;
 import dto.request.RegisterRequest;
@@ -19,7 +19,7 @@ public class Request {
         return new RequestSpecBuilder()
                 .setBaseUri(URL)
                 .setContentType(ContentType.JSON)
-                .addFilter(new Logger())
+                .addFilter(new CustomLogger())
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class Request {
         return new RequestSpecBuilder()
                 .setBaseUri(URL)
                 .setContentType(ContentType.JSON)
-                .addFilter(new Logger())
+                .addFilter(new CustomLogger())
                 .addHeader("Authorization", "Bearer " + GetJwtToken.getToken())
                 .build();
     }

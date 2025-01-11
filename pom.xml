@@ -20,6 +20,7 @@
         <aspectj.version>1.9.21</aspectj.version>
         <faker.version>1.0.2</faker.version>
         <postgres.version>42.7.4</postgres.version>
+        <logger.version>2.24.3</logger.version>
     </properties>
 
     <dependencies>
@@ -68,6 +69,21 @@
             <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
             <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${logger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${logger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${logger.version}</version>
         </dependency>
     </dependencies>
 

@@ -9,11 +9,23 @@ import io.restassured.specification.FilterableResponseSpecification;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
-public class Logger implements Filter {
+public class CustomLogger implements Filter {
+    private static  ThreadLocal<FilterableRequestSpecification> requestThread = new ThreadLocal<>();
+    private static  ThreadLocal<Response> responseThread = new ThreadLocal<>();
+
+    public static FilterableRequestSpecification getRequest() {
+        return requestThread.get();
+    }
+
+    public static Response getResponse() {
+        return responseThread.get();
+    }
 
     @Override
     public Response filter(FilterableRequestSpecification reqSpec, FilterableResponseSpecification resSpec, FilterContext context) {
         Response response = context.next(reqSpec, resSpec);
+        requestThread.set(reqSpec);
+        responseThread.set(response);
 
         logRequest(reqSpec);
         logResponse(response);

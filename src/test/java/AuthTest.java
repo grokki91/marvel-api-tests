@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import utils.CustomAssert;
 import utils.ErrorMessages;
 
 @Owner("QA")
@@ -23,7 +24,7 @@ public class AuthTest {
         String token = res.jsonPath().get("token");
 
         Assertions.assertNotNull(token);
-        Assertions.assertEquals(200, res.statusCode());
+        CustomAssert.equals(200, res.statusCode());
     }
 
     @Test
@@ -38,8 +39,8 @@ public class AuthTest {
 
         String actual = res.jsonPath().getString("Message");
 
-        Assertions.assertEquals(ErrorMessages.EMAIL_EXIST.getMessage(existEmail), actual);
-        Assertions.assertEquals(409, res.statusCode());
+        CustomAssert.equals(ErrorMessages.EMAIL_EXIST.getMessage(existEmail), actual);
+        CustomAssert.equals(409, res.statusCode());
     }
 
     @Test
@@ -54,8 +55,8 @@ public class AuthTest {
 
         String actual = res.jsonPath().getString("Message");
 
-        Assertions.assertEquals(ErrorMessages.USERNAME_EXIST.getMessage(existUsername), actual);
-        Assertions.assertEquals(409, res.statusCode());
+        CustomAssert.equals(ErrorMessages.USERNAME_EXIST.getMessage(existUsername), actual);
+        CustomAssert.equals(409, res.statusCode());
     }
 
     @Test
@@ -71,7 +72,7 @@ public class AuthTest {
         Response res = Request.post(data, "/login");
 
         Assertions.assertNotNull(res.jsonPath().get("token"));
-        Assertions.assertEquals(200, res.statusCode());
+        CustomAssert.equals(200, res.statusCode());
     }
 
     @Description("User login with empty field")
@@ -84,7 +85,7 @@ public class AuthTest {
 
         String actual = res.jsonPath().getString("Message");
 
-        Assertions.assertEquals(ErrorMessages.INVALID_CREDENTIALS.getMessage(), actual);
-        Assertions.assertEquals(401, res.statusCode());
+        CustomAssert.equals(ErrorMessages.INVALID_CREDENTIALS.getMessage(), actual);
+        CustomAssert.equals(401, res.statusCode());
     }
 }

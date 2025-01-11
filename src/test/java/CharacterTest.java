@@ -5,8 +5,8 @@ import dto.request.CharacterRequest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import utils.CustomAssert;
 import utils.ErrorMessages;
 
 @Owner("QA")
@@ -19,19 +19,16 @@ public class CharacterTest extends BaseSetting {
         Response response = Request.getWithoutAuth(endpoint);
         String actual = response.jsonPath().get("Message");
 
-        Assertions.assertEquals(ErrorMessages.JWT_MISSING.getMessage(), actual);
-        Assertions.assertEquals(401, response.statusCode());
+        CustomAssert.equals(ErrorMessages.JWT_MISSING.getMessage(), actual);
+        CustomAssert.equals(401, response.statusCode());
     }
 
     @Test
     @Description("Get list of characters")
     public void checkListCharacters() {
         Response response = Request.get(endpoint);
-        System.out.println(response.asString());
-        String message = response.jsonPath().get("Message");
 
-
-        Assertions.assertEquals(200, response.statusCode());
+        CustomAssert.equals(200, response.statusCode());
     }
 
     @Test
@@ -41,8 +38,8 @@ public class CharacterTest extends BaseSetting {
         response.body().prettyPrint();
         String alias = response.jsonPath().getString("alias");
 
-        Assertions.assertEquals("Wolverine", alias);
-        Assertions.assertEquals(200, response.statusCode());
+        CustomAssert.equals("Wolverine", alias);
+        CustomAssert.equals(200, response.statusCode());
     }
 
     @Test
@@ -54,7 +51,7 @@ public class CharacterTest extends BaseSetting {
         Response response = Request.post(character, endpoint + "/add");
         String actual = response.jsonPath().getString("Message");
 
-        Assertions.assertEquals(ErrorMessages.CHARACTER_ADDED.getMessage(alias), actual);
-        Assertions.assertEquals(200, response.statusCode());
+        CustomAssert.equals(ErrorMessages.CHARACTER_ADDED.getMessage(alias), actual);
+        CustomAssert.equals(200, response.statusCode());
     }
 }
