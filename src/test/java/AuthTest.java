@@ -6,6 +6,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -16,7 +17,7 @@ import utils.ErrorMessages;
 public class AuthTest {
 
     @Test
-    @Description("User registration with valid data")
+    @DisplayName("Test-case 5: User registration with valid data")
     public void successRegistration() {
         RegisterRequest data = RandomGenerateUser.createUser();
 
@@ -28,7 +29,7 @@ public class AuthTest {
     }
 
     @Test
-    @Description("User registration with an existing email")
+    @DisplayName("Test-case 6: User registration with an existing email")
     public void failRegistrationExistEmail() {
         RegisterRequest existUser = RandomGenerateUser.createUser();
         String existEmail = existUser.email();
@@ -44,7 +45,7 @@ public class AuthTest {
     }
 
     @Test
-    @Description("User registration with an existing username")
+    @DisplayName("Test-case 7: User registration with an existing username")
     public void failRegistrationExistUsername() {
         RegisterRequest existUser = RandomGenerateUser.createUser();
         String existUsername = existUser.username();
@@ -60,7 +61,7 @@ public class AuthTest {
     }
 
     @Test
-    @Description("User login with valid data")
+    @DisplayName("Test-case 8: User login with valid data")
     public void successLogin() {
         RegisterRequest existUser = RandomGenerateUser.createUser();
         String username = existUser.username();
@@ -75,8 +76,8 @@ public class AuthTest {
         CustomAssert.equals(200, res.statusCode());
     }
 
-    @Description("User login with empty field")
-    @ParameterizedTest(name = "Login with username = \"{0}\", password = \"{1}\"")
+
+    @ParameterizedTest(name = "Test-case 9: User login with empty field (username = \"{0}\", password = \"{1}\")")
     @CsvFileSource(resources = "data/login_failed.csv", numLinesToSkip = 1)
     public void checkNotSuccessLogin(String username, String password) {
         LoginRequest data = new LoginRequest(username, password);
